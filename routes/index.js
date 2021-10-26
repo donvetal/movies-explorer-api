@@ -3,7 +3,9 @@ const usersRouter = require('./users');
 const moviesRouter = require('./movies');
 const NotFoundError = require('../errors/not-found-err');
 const auth = require('../middlewares/auth');
-const { login, createUser, logout } = require('../controllers/user');
+const {
+  login, createUser, logout, successfulAuth,
+} = require('../controllers/user');
 const { loginValidator, createUserValidator } = require('../middlewares/validations');
 
 router.post('/signin', loginValidator, login);
@@ -14,6 +16,7 @@ router.use(auth);
 router.use('/users', usersRouter);
 router.use('/movies', moviesRouter);
 router.get('/signout', logout);
+router.get('/check-auth', successfulAuth);
 router.all('*', (req, res, next) => {
   next(new NotFoundError('Извините, страница не найдена!'));
 });

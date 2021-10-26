@@ -11,14 +11,14 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((movie) => {
       if (movie) {
-        return next(new ConflictErr('Такой фильм уже существует'));
+        return next(new ConflictErr('Такой фильм уже существует!'));
       }
       return Movie.create({ ...req.body, owner: req.user._id })
         .then((newMovie) => res.send({ data: newMovie }));
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new BadRequestErr('Некорректные данные '));
+        return next(new BadRequestErr('Некорректные данные!'));
       }
       return next(err);
     });
@@ -45,7 +45,7 @@ module.exports.deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestErr('Некорректные данные '));
+        return next(new BadRequestErr('Некорректные данные!'));
       }
       return next(err);
     });
