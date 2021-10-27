@@ -38,8 +38,8 @@ module.exports.deleteMovie = (req, res, next) => {
         return next(new NotFoundErr('Нет фильма по заданному id'));
       }
       if (movie.owner.toString() === req.user._id.toString()) {
-        return Movie.findByIdAndRemove(req.params.id)
-          .then(() => res.status(200).send({ message: 'Фильм удален!' }));
+        return movie.remove()
+          .then(() => res.status(200).send({ message: movie }));
       }
       return next(new ForbiddenErr('Нет прав для удаления данного фильма!'));
     })
