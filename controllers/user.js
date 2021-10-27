@@ -57,12 +57,7 @@ module.exports.getProfile = (req, res, next) => {
       }
       return res.send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new BadRequestErr('Невалидный id'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateProfile = (req, res, next) => {
