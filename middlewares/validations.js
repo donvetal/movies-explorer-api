@@ -22,7 +22,7 @@ module.exports.createUserValidator = celebrate({
     email: Joi.string().required().email()
       .message('Поле "email" должно быть валидным email-адресом'),
     password: Joi.string().required().min(8),
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
   }),
 });
 
