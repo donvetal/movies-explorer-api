@@ -28,6 +28,4 @@ app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);
