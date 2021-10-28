@@ -1,10 +1,11 @@
 const { celebrate, Joi } = require('celebrate');
 const { validateLink } = require('../utils/validateLink');
+const { messages } = require('../utils/constants');
 
 module.exports.updateProfileValidator = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
-      .message('Поле "email" должно быть валидным email-адресом'),
+      .message(messages.invalidEmail),
     name: Joi.string().required().min(2).max(30),
   }),
 });
@@ -12,7 +13,7 @@ module.exports.updateProfileValidator = celebrate({
 module.exports.loginValidator = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
-      .message('Поле "email" должно быть валидным email-адресом'),
+      .message(messages.invalidEmail),
     password: Joi.string().required().min(8),
   }),
 });
@@ -20,7 +21,7 @@ module.exports.loginValidator = celebrate({
 module.exports.createUserValidator = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
-      .message('Поле "email" должно быть валидным email-адресом'),
+      .message(messages.invalidEmail),
     password: Joi.string().required().min(8),
     name: Joi.string().required().min(2).max(30),
   }),

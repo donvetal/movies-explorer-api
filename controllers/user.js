@@ -6,6 +6,7 @@ const { secretKey } = require('../utils/config');
 const NotFoundErr = require('../errors/not-found-err');
 const BadRequestErr = require('../errors/bad-request-err');
 const ConflictErr = require('../errors/conflict-err');
+const { messages } = require('../utils/constants');
 
 module.exports.createUser = (req, res, next) => {
   const { email, password, name } = req.body;
@@ -21,10 +22,10 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new BadRequestErr('Некорректные данные '));
+        return next(new BadRequestErr(messages.badRequest));
       }
       if (err.name === 'MongoServerError' && err.code === 11000) {
-        return next(new ConflictErr('Конфликт, такой email уже существует.'));
+        return next(new ConflictErr(messages.user.conflict));
       }
       return next(err);
     });
@@ -43,7 +44,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.status(200).send({ message: 'Авторизация прошла успешно!' });
+      res.status(200).send({ message: messages.user.authSuccess });
     })
     .catch(next);
 };
@@ -52,7 +53,7 @@ module.exports.getProfile = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundErr('Пользователь по указанному _id не найден.');
+        throw new NotFoundErr(messages.user.notFoundUserId);
       }
       return res.send({ data: user });
     })
@@ -64,26 +65,26 @@ module.exports.updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { email, name }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        throw new NotFoundErr('Пользователь по указанному _id не найден.');
+        throw new NotFoundErr(messages.user.notFoundUserId);
       }
       return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestErr('Невалидный id'));
+        return next(new BadRequestErr(messages.user.invalidId));
       }
       if (err.name === 'ValidationError') {
-        return next(new BadRequestErr('Некорректные данные'));
+        return next(new BadRequestErr(messages.badRequest));
       }
       if (err.name === 'MongoServerError' && err.code === 11000) {
-        return next(new ConflictErr('Конфликт, такой email уже существует.'));
+        return next(new ConflictErr(messages.user.conflict));
       }
       return next(err);
     });
 };
 module.exports.logout = (req, res) => {
-  res.clearCookie('jwt').send({ message: 'Вы вышли!' });
+  res.clearCookie('jwt').send({ message: messages.user.logout });
 };
 module.exports.successfulAuth = (req, res) => {
-  res.send({ message: 'Вы авторизованы!' });
+  res.send({ message: messages.user.successfulAuth });
 };
